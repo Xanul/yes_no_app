@@ -8,13 +8,14 @@ class ChatProvider extends ChangeNotifier {
   final GetYesNoAnswer getYesNoAnsewer = GetYesNoAnswer();
   
 
-  List<Message> messageList = [
-    Message(text: "Hola anonimo!", fromWho: FromWho.mine),
-    Message(text: "Que estas haciendo", fromWho: FromWho.mine)
-  ];
+  List<Message> messageList = [];
 
   Future<void> otherReply() async {
     final otherMessage = await getYesNoAnsewer.getAnswer();
+    messageList.add(otherMessage);
+
+    notifyListeners();
+    moveScrollToBottom();
   }
 
   Future<void> sendMessage(String text) async {
@@ -23,7 +24,7 @@ class ChatProvider extends ChangeNotifier {
 
     final newMessage = Message(text: text, fromWho: FromWho.mine);
     messageList.add(newMessage);
-    
+
     if (text.endsWith('? ')){
       otherReply();
     }    
